@@ -124,7 +124,9 @@ INSERT INTO characters VALUES ('pablous', 'Pablo', 'Wizard', 'City', 100, '40.12
 INSERT INTO characters VALUES ('leyons', 'Leo', 'Wizard', 'City', 100, '40.123, -32.294'));
  
 --Item Inserts
-
+INSERT INTO item VALUES ('adamchlebek', 'Adam', 'Red Sharp', 'Sword', 4);
+INSERT INTO item VALUES ('adamchlebek', 'Adam', 'Ninja Star', 'Knife', 3);
+INSERT INTO item VALUES ('adamchlebek', 'Adam', 'Wooden Sniper', 'Bow', 5);
 
 SET FEEDBACK ON
 COMMIT;
