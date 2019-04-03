@@ -1,0 +1,267 @@
+SQL> SET ECHO ON
+SQL> /*
+SQL> CIS 353 - Database Design Project
+SQL> Adam Chlebek
+SQL> Phillip Picard
+SQL> Gabe Gunnink
+SQL> */
+SQL> 
+SQL> --DROP TABLES BEFORE STARTING
+SQL> 
+SQL> DROP TABLE users CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE loginTimes CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE characters CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE item CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE location CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE race CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE isDoing CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE quest CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> --END DROP TABLES
+SQL> 
+SQL> CREATE TABLE users (
+  2    username      varchar(30),
+  3    cName	     varchar(30),
+  4    password      varchar(40),
+  5    isLoggedIn    integer,
+  6    language      varchar(20),
+  7    primary key (username)
+  8  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE loginTimes (
+  2    username      varchar(30),
+  3    loginTime     timestamp,
+  4    primary key(username, loginTime)
+  5  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE characters (
+  2    username      varchar(30),
+  3    cName	     varchar(30),
+  4    rName	     varchar(40),
+  5    lName	     varchar(30),
+  6    health	     integer,
+  7    position      varchar(30),
+  8    primary key (username, cName)
+  9  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE item (
+  2    username      varchar(30),
+  3    cName	     varchar(30),
+  4    iName	     varchar(40),
+  5    cType	     varchar(30),
+  6    iLevel	     integer,
+  7    primary key (username, cName, iName)
+  8  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE location (
+  2    lNAme	 varchar(30),
+  3    position  varchar(30),
+  4    ltype	 varchar(30),
+  5    primary key (lName)
+  6  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE race (
+  2    rName	 varchar(30),
+  3    strength  integer,
+  4    speed	 integer,
+  5    armor	 integer,
+  6    primary key (rName)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE isDoing (
+  2    username        varchar(30),
+  3    cName	       varchar(30),
+  4    qID	       varchar(40),
+  5    percentProgress decimal(3,2),
+  6    primary key (username, cName, qID)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE quest (
+  2    qID	     varchar(40),
+  3    qName	     varchar(30),
+  4    task	     varchar(40),
+  5    description   varchar(200),
+  6    primary key (qID)
+  7  );
+
+Table created.
+
+SQL> 
+SQL> 
+SQL> --Add Foreign Keys Here
+SQL> 
+SQL> --Example is listed below
+SQL> --ALTER TABLE employee
+SQL> --ADD FOREIGN KEY (super_ssn) references employee(ssn)
+SQL> --Deferrable initially deferred;
+SQL> 
+SQL> --End of Adding Foreign Keys
+SQL> 
+SQL> --
+SQL> SET FEEDBACK OFF
+SQL> --< The INSERT statements that populate the tables>
+SQL> 
+SQL> --User Inserts
+SQL> INSERT INTO users VALUES ('adamchlebek', 'Adam', 'password123', 0, 'EN');
+SQL> INSERT INTO users VALUES ('phillippicard', 'Phillip', 'philpass', 1, 'EN');
+SQL> INSERT INTO users VALUES ('gabegunnink', 'Gabe', 'passgabe12', 0, 'EN');
+SQL> INSERT INTO users VALUES ('pablous', 'Pablo', 'pablopass', 1, 'ES');
+SQL> INSERT INTO users VALUES ('leyons', 'Leo', 'wordPass', 0, 'FR');
+SQL> INSERT INTO users VALUES ('adamles2', 'Adam', 'adampass1', 0, 'DE');
+SQL> 
+SQL> --Login Times Inserts
+SQL> INSERT INTO loginTimes VALUES ('adamchlebek', TO_DATE('2018-10-11 12:42:23', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('adamchlebek', TO_DATE('2018-11-13 14:22:13', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('phillippicard', TO_DATE('2019-01-11 05:12:32', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('phillippicard', TO_DATE('2019-03-12 21:42:35', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('gabegunnink', TO_DATE('2018-12-13 05:25:52', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('pablous', TO_DATE('2018-10-19 02:52:26', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('leyons', TO_DATE('2019-02-24 17:36:17', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('leyons', TO_DATE('2019-03-14 18:18:40', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> 
+SQL> 
+SQL> SET FEEDBACK ON
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> --
+SQL> --< One query (per table) of the form: SELECT * FROM table; in order to print out your database >
+SQL> SELECT * FROM users;
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+PASSWORD                                 ISLOGGEDIN LANGUAGE                    
+---------------------------------------- ---------- --------------------        
+adamchlebek                    Adam                                             
+password123                                       0 EN                          
+                                                                                
+phillippicard                  Phillip                                          
+philpass                                          1 EN                          
+                                                                                
+gabegunnink                    Gabe                                             
+passgabe12                                        0 EN                          
+                                                                                
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+PASSWORD                                 ISLOGGEDIN LANGUAGE                    
+---------------------------------------- ---------- --------------------        
+pablous                        Pablo                                            
+pablopass                                         1 ES                          
+                                                                                
+leyons                         Leo                                              
+wordPass                                          0 FR                          
+                                                                                
+adamles2                       Adam                                             
+adampass1                                         0 DE                          
+                                                                                
+
+6 rows selected.
+
+SQL> SELECT * FROM loginTimes;
+
+USERNAME                                                                        
+------------------------------                                                  
+LOGINTIME                                                                       
+---------------------------------------------------------------------------     
+adamchlebek                                                                     
+11-OCT-18 12.42.23.000000 PM                                                    
+                                                                                
+adamchlebek                                                                     
+13-NOV-18 02.22.13.000000 PM                                                    
+                                                                                
+gabegunnink                                                                     
+13-DEC-18 05.25.52.000000 AM                                                    
+                                                                                
+
+USERNAME                                                                        
+------------------------------                                                  
+LOGINTIME                                                                       
+---------------------------------------------------------------------------     
+leyons                                                                          
+24-FEB-19 05.36.17.000000 PM                                                    
+                                                                                
+leyons                                                                          
+14-MAR-19 06.18.40.000000 PM                                                    
+                                                                                
+pablous                                                                         
+19-OCT-18 02.52.26.000000 AM                                                    
+                                                                                
+
+USERNAME                                                                        
+------------------------------                                                  
+LOGINTIME                                                                       
+---------------------------------------------------------------------------     
+phillippicard                                                                   
+11-JAN-19 05.12.32.000000 AM                                                    
+                                                                                
+phillippicard                                                                   
+12-MAR-19 09.42.35.000000 PM                                                    
+                                                                                
+
+8 rows selected.
+
+SQL> 
+SQL> --< The SQL queries>. Include the following for each query:
+SQL> --1. A comment line stating the query number and the feature(s) it demonstrates
+SQL> --(e.g. – Q25 – correlated subquery).
+SQL> --2. A comment line stating the query in English.
+SQL> --3. The SQL code for the query.
+SQL> --
+SQL> --< The insert/delete/update statements to test the enforcement of ICs >
+SQL> --Include the following items for every IC that you test (Important: see the next section titled
+SQL> --“Submit a final report” regarding which ICs to test).
+SQL> --A comment line stating: Testing: < IC name>
+SQL> --A SQL INSERT, DELETE, or UPDATE that will test the IC.
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> --
+SQL> SPOOL OFF
