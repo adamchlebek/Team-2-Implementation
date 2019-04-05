@@ -26,9 +26,7 @@ CREATE TABLE users (
   password      varchar(40) NOT NULL,
   isLoggedIn    integer NOT NULL,
   language      varchar(20),
-  primary key (username),
-
-  CONSTRAINT IC1 CHECK (language IN ('EN', 'FR', 'DE', 'ES', 'IT', 'RU'))
+  primary key (username)
 );
 
 CREATE TABLE loginTimes (
@@ -95,16 +93,22 @@ Deferrable initially deferred;
 
 --End of Adding Foreign Keys
 
+--Add Constraints Here
+ALTER TABLE users ADD CONSTRAINT UC1 CHECK (language IN ('EN', 'FR', 'DE', 'ES', 'IT', 'RU'));
+ALTER TABLE location ADD CONSTRAINT UC2 CHECK (ltype in ('City', 'Castle', 'Market', 'Cave', 'Forest'));
+ALTER TABLE race ADD CONSTRAINT RC1 CHECK (strength > armor);
+--End of Adding Constraings
+
 --
 SET FEEDBACK OFF
 --< The INSERT statements that populate the tables>
 
 --User Inserts
-INSERT INTO users VALUES ('adamchlebek', 'Adam', 'password123', 0, 'EN');
-INSERT INTO users VALUES ('philippicard', 'Philip', 'philpass', 1, 'EN');
-INSERT INTO users VALUES ('gabegunnink', 'Gabe', 'passgabe12', 0, 'EN');
-INSERT INTO users VALUES ('pablous', 'Pablo', 'pablopass', 1, 'ES');
-INSERT INTO users VALUES ('leyons', 'Leo', 'wordPass', 0, 'FR');
+INSERT INTO users VALUES ('adamchlebek', 'Gandalf', 'password123', 0, 'EN');
+INSERT INTO users VALUES ('philippicard', 'Big Phil', 'philpass', 1, 'EN');
+INSERT INTO users VALUES ('gabegunnink', 'Gabster', 'passgabe12', 0, 'EN');
+INSERT INTO users VALUES ('pablous', 'Mega Pablo', 'pablopass', 1, 'ES');
+INSERT INTO users VALUES ('leyons', 'Leo The Great', 'wordPass', 0, 'FR');
 
 --Login Times Inserts
 INSERT INTO loginTimes VALUES ('adamchlebek', TO_DATE('2018-10-11 12:42:23', 'yyyy/mm/dd hh24:mi:ss'));
@@ -117,16 +121,50 @@ INSERT INTO loginTimes VALUES ('leyons', TO_DATE('2019-02-24 17:36:17', 'yyyy/mm
 INSERT INTO loginTimes VALUES ('leyons', TO_DATE('2019-03-14 18:18:40', 'yyyy/mm/dd hh24:mi:ss'));
 
 --Characters Inserts
-INSERT INTO characters VALUES ('adamchlebek', 'Adam', 'Wizard', 'City', 100, '40.123, -32.294'));
-INSERT INTO characters VALUES ('philippicard', 'Philip', 'Wizard', 'City', 100, '40.123, -32.294'));
-INSERT INTO characters VALUES ('gabegunnink', 'Gabe', 'Wizard', 'City', 100, '40.123, -32.294'));
-INSERT INTO characters VALUES ('pablous', 'Pablo', 'Wizard', 'City', 100, '40.123, -32.294'));
-INSERT INTO characters VALUES ('leyons', 'Leo', 'Wizard', 'City', 100, '40.123, -32.294'));
+INSERT INTO characters VALUES ('adamchlebek', 'Gandalf', 'Wizard', 'King City', 100, '10.123, -18.294');
+INSERT INTO characters VALUES ('philippicard', 'Big Phil', 'Elf', 'Castle of Doom', 75, '110.123, 32.294');
+INSERT INTO characters VALUES ('gabegunnink', 'Gabster', 'Wizard', 'Castle of Doom', 52, '103, 36.4');
+INSERT INTO characters VALUES ('pablous', 'Mega Pablo', 'Human', 'The Goods Market', 100, '37.3, 10.24');
+INSERT INTO characters VALUES ('leyons', 'Leo The Great', 'Goblin', 'Goblin Caves', 87, '-56, 32');
  
 --Item Inserts
-INSERT INTO item VALUES ('adamchlebek', 'Adam', 'Red Sharp', 'Sword', 4);
-INSERT INTO item VALUES ('adamchlebek', 'Adam', 'Ninja Star', 'Knife', 3);
-INSERT INTO item VALUES ('adamchlebek', 'Adam', 'Wooden Sniper', 'Bow', 5);
+INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Red Sharp', 'Sword', 4);
+INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Ninja Star', 'Knife', 3);
+INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Wooden Sniper', 'Bow', 5);
+INSERT INTO item VALUES ('philippicaard', 'Big Phil', 'Gauze', 'Health Pack', 1);
+INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Beef', 'Food', 3);
+INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Bread', 'Food', 1);
+--Gabes Items
+INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Sprinters', 'Shoes', 3);
+INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Red Bull', 'Drink', 1);
+INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Marker', 'Writing', 3);
+INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Bloodhound', 'Animal', 4);
+INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Red Bull', 'Drink', 1);
+INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Marker', 'Writing', 3);
+--INSERT ALL UR ITEMS PLZ--
+
+--Location Inserts
+INSERT INTO location VALUES ('King City', '10.6, -16', 'City');
+INSERT INTO location VALUES ('Castle of Doom', '100.45, 36.8', 'Castle');
+INSERT INTO location VALUES ('The Weapons Market', '43.9, 11.6', 'Market');
+INSERT INTO location VALUES ('The Goods Market', '38.4, 10.8', 'Market');
+INSERT INTO location VALUES ('Goblin Caves', '-56.4, 32.9', 'Cave');
+INSERT INTO location VALUES ('The Haunted Forest', '-43, 38', 'Forest');
+
+--Race Inserts
+INSERT INTO race VALUES ('Wizard', 10, 4, 2);
+INSERT INTO race VALUES ('Elf', 5, 10, 3);
+INSERT INTO race VALUES ('Goblin', 3, 3, 2);
+INSERT INTO race VALUES ('Human', 4, 5, 3);
+
+--isDoing Inserts
+--INSERT ISDOING PLZ--
+
+--Quest Inserts--
+INSERT INTO quest VALUES (1, 'Goblin Hunt', 'Hunt', 'An army of goblins are attacking the city! Hunt them!');
+INSERT INTO quest VALUES (2, 'Resuce the Princess', 'Resuce', 'The dragon has kidnapped the princess. Please rescue her!');
+INSERT INTO quest VALUES (3, 'Slay the Dragon', 'Hunt', 'An evil dragon is attacking the castle. Please save the castle!');
+INSERT INTO quest VALUES ()
 
 SET FEEDBACK ON
 COMMIT;
