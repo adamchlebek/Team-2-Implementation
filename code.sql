@@ -3,7 +3,7 @@ SET ECHO ON
 /*
 CIS 353 - Database Design Project
 Adam Chlebek
-Phillip Picard
+Philip Picard
 Gabe Gunnink
 */
 
@@ -73,7 +73,7 @@ CREATE TABLE isDoing (
   username        varchar(30), 
   cName           varchar(30),
   qID             varchar(40),
-  percentProgress decimal(3,2),
+  percentProgress integer,
   primary key (username, cName, qID)
 );
 
@@ -87,16 +87,34 @@ CREATE TABLE quest (
 
 
 --Add Foreign Keys Here
-ALTER TABLE loginTimes
-ADD FOREIGN KEY (username) references users(username)
-Deferrable initially deferred;
+ALTER TABLE users
+ADD FOREIGN KEY (cName) REFERENCES characters(cName);
 
+ALTER TABLE loginTimes
+ADD FOREIGN KEY (username) references users(username);
+
+ALTER TABLE characters
+ADD FOREIGN KEY (username) references users(username);
+
+ALTER TABLE item
+ADD FOREIGN KEY (username, cName) references users(username, cName);
+
+ALTER TABLE isDoing
+ADD FOREIGN KEY (username, cName) references users(username, cName);
+
+--ALTER TABLE isDoing
+--ADD FOREIGN KEY (cName) references characters(cName);
+
+ALTER TABLE isDoing
+ADD FOREIGN KEY (qID) references quest(qID);
 --End of Adding Foreign Keys
+
 
 --Add Constraints Here
 ALTER TABLE users ADD CONSTRAINT UC1 CHECK (language IN ('EN', 'FR', 'DE', 'ES', 'IT', 'RU'));
 ALTER TABLE location ADD CONSTRAINT UC2 CHECK (ltype in ('City', 'Castle', 'Market', 'Cave', 'Forest'));
-ALTER TABLE race ADD CONSTRAINT RC1 CHECK (strength > armor);
+ALTER TABLE quest ADD CONSTRAINT UC3 CHECK (task in ('Hunt', 'Rescue', 'Find'));
+--Change this Constraint-- ALTER TABLE race ADD CONSTRAINT RC1 CHECK (strength > armor);
 --End of Adding Constraings
 
 --
@@ -131,17 +149,18 @@ INSERT INTO characters VALUES ('leyons', 'Leo The Great', 'Goblin', 'Goblin Cave
 INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Red Sharp', 'Sword', 4);
 INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Ninja Star', 'Knife', 3);
 INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Wooden Sniper', 'Bow', 5);
-INSERT INTO item VALUES ('philippicaard', 'Big Phil', 'Gauze', 'Health Pack', 1);
+INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Gauze', 'Health Pack', 1);
 INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Beef', 'Food', 3);
 INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Bread', 'Food', 1);
---Gabes Items
+INSERT INTO item VALUES ('gabegunnink', 'Gabster','fire staff++','magic weapon', 4);
+INSERT INTO item VALUES ('gabegunnink', 'Gabster','fire runes','ammo', 1);
+INSERT INTO item VALUES ('gabegunnink', 'Gabster','robes of mordor','magic armor', 5);
 INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Sprinters', 'Shoes', 3);
 INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Red Bull', 'Drink', 1);
 INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Marker', 'Writing', 3);
 INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Bloodhound', 'Animal', 4);
 INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Red Bull', 'Drink', 1);
 INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Marker', 'Writing', 3);
---INSERT ALL UR ITEMS PLZ--
 
 --Location Inserts
 INSERT INTO location VALUES ('King City', '10.6, -16', 'City');
@@ -158,13 +177,16 @@ INSERT INTO race VALUES ('Goblin', 3, 3, 2);
 INSERT INTO race VALUES ('Human', 4, 5, 3);
 
 --isDoing Inserts
---INSERT ISDOING PLZ--
+INSERT INTO isDoing VALUES ('leyons', 'Leo The Great', 1, 50);
+INSERT INTO isDoing VALUES ('leyons', 'Leo The Great', 3, 12);
+INSERT INTO isDoing VALUES ('philippicard', 'Big Phil', 4, 92);
+INSERT INTO isDoing VALUES ('gabegunnink', 'Gabster', 1, 51);
 
 --Quest Inserts--
 INSERT INTO quest VALUES (1, 'Goblin Hunt', 'Hunt', 'An army of goblins are attacking the city! Hunt them!');
-INSERT INTO quest VALUES (2, 'Resuce the Princess', 'Resuce', 'The dragon has kidnapped the princess. Please rescue her!');
+INSERT INTO quest VALUES (2, 'Resuce the Princess', 'Rescue', 'The dragon has kidnapped the princess. Please rescue her!');
 INSERT INTO quest VALUES (3, 'Slay the Dragon', 'Hunt', 'An evil dragon is attacking the castle. Please save the castle!');
-INSERT INTO quest VALUES ()
+INSERT INTO quest VALUES (4, 'Find the Gold', 'Find', 'The king has lost his gold! Please go and find it.');
 
 SET FEEDBACK ON
 COMMIT;
@@ -183,6 +205,16 @@ SELECT * FROM quest;
 --1. A comment line stating the query number and the feature(s) it demonstrates (e.g. – Q25 – correlated subquery).
 --2. A comment line stating the query in English.
 --3. The SQL code for the query.
+--NOTE: we need. . . 
+-- a join involving at least four relations
+-- a self-join
+-- UNION, INTESECT, and/or MINUS
+-- SUM, AVG, MAX and/or MIN
+-- GROUP BY, HAVING, and ORDER BY, all in same query
+-- a correlated subquery
+-- a non-correlated subquery
+-- a relational DIVISION query
+-- an outer join query
 --
 --< The insert/delete/update statements to test the enforcement of ICs >
 
@@ -194,3 +226,9 @@ SELECT * FROM quest;
 COMMIT;
 --
 SPOOL OFF
+
+
+--TODO:
+--Change Around Foreign Key Relations (Office Hours?)
+--Add Complex Queries
+--Test Constraing with insert/delete/update statements
