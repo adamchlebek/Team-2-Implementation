@@ -126,6 +126,7 @@ ALTER TABLE quest ADD CONSTRAINT UC3 CHECK (task in ('Hunt', 'Rescue', 'Find'));
 ALTER TABLE item ADD CONSTRAINT UC4 CHECK (NOT(cType = 'Sword' AND iLevel > 10));
 ALTER TABLE race ADD CONSTRAINT UC5 CHECK (NOT(rName = 'Wizard' AND speed > 10));
 ALTER TABLE race ADD CONSTRAINT UC6 CHECK (strength > armor);
+ALTER TABLE users ADD CONSTRAINT UC6 CHECK (isLoggedIn IN (0, 1));					       
 --End of Adding Constraings
 
 --
