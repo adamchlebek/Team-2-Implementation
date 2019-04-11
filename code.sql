@@ -123,7 +123,9 @@ ADD CONSTRAINT fk6 FOREIGN KEY (qID) REFERENCES quest(qID)
 ALTER TABLE users ADD CONSTRAINT UC1 CHECK (language IN ('EN', 'FR', 'DE', 'ES', 'IT', 'RU'));
 ALTER TABLE location ADD CONSTRAINT UC2 CHECK (ltype in ('City', 'Castle', 'Market', 'Cave', 'Forest'));
 ALTER TABLE quest ADD CONSTRAINT UC3 CHECK (task in ('Hunt', 'Rescue', 'Find'));
---Change this Constraint-- ALTER TABLE race ADD CONSTRAINT RC1 CHECK (strength > armor);
+ALTER TABLE item ADD CONSTRAINT UC4 CHECK (NOT(cType = 'Sword' AND iLevel > 10));
+ALTER TABLE race ADD CONSTRAINT UC5 CHECK (NOT(rName = 'Wizard' AND speed > 10));
+ALTER TABLE race ADD CONSTRAINT UC6 CHECK (strength > armor);
 --End of Adding Constraings
 
 --
