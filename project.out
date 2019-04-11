@@ -2,7 +2,7 @@ SQL> SET ECHO ON
 SQL> /*
 SQL> CIS 353 - Database Design Project
 SQL> Adam Chlebek
-SQL> Phillip Picard
+SQL> Philip Picard
 SQL> Gabe Gunnink
 SQL> */
 SQL> 
@@ -45,9 +45,9 @@ SQL> --END DROP TABLES
 SQL> 
 SQL> CREATE TABLE users (
   2    username      varchar(30),
-  3    cName	     varchar(30),
-  4    password      varchar(40),
-  5    isLoggedIn    integer,
+  3    cName	     varchar(30) NOT NULL,
+  4    password      varchar(40) NOT NULL,
+  5    isLoggedIn    integer NOT NULL,
   6    language      varchar(20),
   7    primary key (username)
   8  );
@@ -67,9 +67,9 @@ SQL>
 SQL> CREATE TABLE characters (
   2    username      varchar(30),
   3    cName	     varchar(30),
-  4    rName	     varchar(40),
-  5    lName	     varchar(30),
-  6    health	     integer,
+  4    rName	     varchar(40) NOT NULL,
+  5    lName	     varchar(30) NOT NULL,
+  6    health	     integer NOT NULL,
   7    position      varchar(30),
   8    primary key (username, cName)
   9  );
@@ -114,7 +114,7 @@ SQL> CREATE TABLE isDoing (
   2    username        varchar(30),
   3    cName	       varchar(30),
   4    qID	       varchar(40),
-  5    percentProgress decimal(3,2),
+  5    percentProgress integer,
   6    primary key (username, cName, qID)
   7  );
 
@@ -134,36 +134,153 @@ Table created.
 SQL> 
 SQL> 
 SQL> --Add Foreign Keys Here
+SQL> ALTER TABLE users
+  2  ADD CONSTRAINT fk1 FOREIGN KEY (username, cName) REFERENCES characters(username, cName)
+  3  	     ON DELETE CASCADE
+  4  	     DEFERRABLE INITIALLY DEFERRED;
+
+Table altered.
+
 SQL> 
-SQL> --Example is listed below
-SQL> --ALTER TABLE employee
-SQL> --ADD FOREIGN KEY (super_ssn) references employee(ssn)
-SQL> --Deferrable initially deferred;
+SQL> ALTER TABLE loginTimes
+  2  ADD CONSTRAINT fk2 FOREIGN KEY (username) REFERENCES users(username)
+  3  	     ON DELETE CASCADE
+  4  	     DEFERRABLE INITIALLY DEFERRED;
+
+Table altered.
+
 SQL> 
+SQL> ALTER TABLE characters
+  2  ADD CONSTRAINT fk3 FOREIGN KEY (username) REFERENCES users(username)
+  3  	     ON DELETE CASCADE
+  4  	     DEFERRABLE INITIALLY DEFERRED;
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE item
+  2  ADD CONSTRAINT fk4 FOREIGN KEY (username, cName) REFERENCES characters(username, cName)
+  3  	     ON DELETE CASCADE
+  4  	     DEFERRABLE INITIALLY DEFERRED;
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE isDoing
+  2  ADD CONSTRAINT fk5 FOREIGN KEY (username, cName) REFERENCES characters(username, cName)
+  3  	     ON DELETE CASCADE
+  4  	     DEFERRABLE INITIALLY DEFERRED;
+
+Table altered.
+
+SQL> 
+SQL> ALTER TABLE isDoing
+  2  ADD CONSTRAINT fk6 FOREIGN KEY (qID) REFERENCES quest(qID)
+  3  	     ON DELETE CASCADE
+  4  	     DEFERRABLE INITIALLY DEFERRED;
+
+Table altered.
+
 SQL> --End of Adding Foreign Keys
+SQL> 
+SQL> 
+SQL> --Add Constraints Here
+SQL> ALTER TABLE users ADD CONSTRAINT UC1 CHECK (language IN ('EN', 'FR', 'DE', 'ES', 'IT', 'RU'));
+
+Table altered.
+
+SQL> ALTER TABLE location ADD CONSTRAINT UC2 CHECK (ltype in ('City', 'Castle', 'Market', 'Cave', 'Forest'));
+
+Table altered.
+
+SQL> ALTER TABLE quest ADD CONSTRAINT UC3 CHECK (task in ('Hunt', 'Rescue', 'Find'));
+
+Table altered.
+
+SQL> ALTER TABLE item ADD CONSTRAINT UC4 CHECK (NOT(cType = 'Sword' AND iLevel > 10));
+
+Table altered.
+
+SQL> ALTER TABLE race ADD CONSTRAINT UC5 CHECK (NOT(rName = 'Wizard' AND speed > 10));
+
+Table altered.
+
+SQL> ALTER TABLE race ADD CONSTRAINT UC6 CHECK (strength > armor);
+
+Table altered.
+
+SQL> --End of Adding Constraings
 SQL> 
 SQL> --
 SQL> SET FEEDBACK OFF
 SQL> --< The INSERT statements that populate the tables>
 SQL> 
 SQL> --User Inserts
-SQL> INSERT INTO users VALUES ('adamchlebek', 'Adam', 'password123', 0, 'EN');
-SQL> INSERT INTO users VALUES ('phillippicard', 'Phillip', 'philpass', 1, 'EN');
-SQL> INSERT INTO users VALUES ('gabegunnink', 'Gabe', 'passgabe12', 0, 'EN');
-SQL> INSERT INTO users VALUES ('pablous', 'Pablo', 'pablopass', 1, 'ES');
-SQL> INSERT INTO users VALUES ('leyons', 'Leo', 'wordPass', 0, 'FR');
-SQL> INSERT INTO users VALUES ('adamles2', 'Adam', 'adampass1', 0, 'DE');
+SQL> INSERT INTO users VALUES ('adamchlebek', 'Gandalf', 'password123', 0, 'EN');
+SQL> INSERT INTO users VALUES ('philippicard', 'Big Phil', 'philpass', 1, 'EN');
+SQL> INSERT INTO users VALUES ('gabegunnink', 'Gabster', 'passgabe12', 0, 'EN');
+SQL> INSERT INTO users VALUES ('pablous', 'Mega Pablo', 'pablopass', 1, 'ES');
+SQL> INSERT INTO users VALUES ('leyons', 'Leo The Great', 'wordPass', 0, 'FR');
 SQL> 
 SQL> --Login Times Inserts
 SQL> INSERT INTO loginTimes VALUES ('adamchlebek', TO_DATE('2018-10-11 12:42:23', 'yyyy/mm/dd hh24:mi:ss'));
 SQL> INSERT INTO loginTimes VALUES ('adamchlebek', TO_DATE('2018-11-13 14:22:13', 'yyyy/mm/dd hh24:mi:ss'));
-SQL> INSERT INTO loginTimes VALUES ('phillippicard', TO_DATE('2019-01-11 05:12:32', 'yyyy/mm/dd hh24:mi:ss'));
-SQL> INSERT INTO loginTimes VALUES ('phillippicard', TO_DATE('2019-03-12 21:42:35', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('philippicard', TO_DATE('2019-01-11 05:12:32', 'yyyy/mm/dd hh24:mi:ss'));
+SQL> INSERT INTO loginTimes VALUES ('philippicard', TO_DATE('2019-03-12 21:42:35', 'yyyy/mm/dd hh24:mi:ss'));
 SQL> INSERT INTO loginTimes VALUES ('gabegunnink', TO_DATE('2018-12-13 05:25:52', 'yyyy/mm/dd hh24:mi:ss'));
 SQL> INSERT INTO loginTimes VALUES ('pablous', TO_DATE('2018-10-19 02:52:26', 'yyyy/mm/dd hh24:mi:ss'));
 SQL> INSERT INTO loginTimes VALUES ('leyons', TO_DATE('2019-02-24 17:36:17', 'yyyy/mm/dd hh24:mi:ss'));
 SQL> INSERT INTO loginTimes VALUES ('leyons', TO_DATE('2019-03-14 18:18:40', 'yyyy/mm/dd hh24:mi:ss'));
 SQL> 
+SQL> --Characters Inserts
+SQL> INSERT INTO characters VALUES ('adamchlebek', 'Gandalf', 'Wizard', 'King City', 100, '10.123, -18.294');
+SQL> INSERT INTO characters VALUES ('philippicard', 'Big Phil', 'Elf', 'Castle of Doom', 75, '110.123, 32.294');
+SQL> INSERT INTO characters VALUES ('gabegunnink', 'Gabster', 'Wizard', 'Castle of Doom', 52, '103, 36.4');
+SQL> INSERT INTO characters VALUES ('pablous', 'Mega Pablo', 'Human', 'The Goods Market', 100, '37.3, 10.24');
+SQL> INSERT INTO characters VALUES ('leyons', 'Leo The Great', 'Goblin', 'Goblin Caves', 87, '-56, 32');
+SQL> 
+SQL> --Item Inserts
+SQL> INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Red Sharp', 'Sword', 4);
+SQL> INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Ninja Star', 'Knife', 3);
+SQL> INSERT INTO item VALUES ('adamchlebek', 'Gandalf', 'Wooden Sniper', 'Bow', 5);
+SQL> INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Gauze', 'Health Pack', 1);
+SQL> INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Beef', 'Food', 3);
+SQL> INSERT INTO item VALUES ('philippicard', 'Big Phil', 'Bread', 'Food', 1);
+SQL> INSERT INTO item VALUES ('gabegunnink', 'Gabster','fire staff++','magic weapon', 4);
+SQL> INSERT INTO item VALUES ('gabegunnink', 'Gabster','fire runes','ammo', 1);
+SQL> INSERT INTO item VALUES ('gabegunnink', 'Gabster','robes of mordor','magic armor', 5);
+SQL> INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Sprinters', 'Shoes', 3);
+SQL> INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Red Bull', 'Drink', 1);
+SQL> INSERT INTO item VALUES ('pablous', 'Mega Pablo', 'Marker', 'Writing', 3);
+SQL> INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Bloodhound', 'Animal', 4);
+SQL> INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Red Bull', 'Drink', 1);
+SQL> INSERT INTO item VALUES ('leyons', 'Leo The Great', 'Marker', 'Writing', 3);
+SQL> 
+SQL> --Location Inserts
+SQL> INSERT INTO location VALUES ('King City', '10.6, -16', 'City');
+SQL> INSERT INTO location VALUES ('Castle of Doom', '100.45, 36.8', 'Castle');
+SQL> INSERT INTO location VALUES ('The Weapons Market', '43.9, 11.6', 'Market');
+SQL> INSERT INTO location VALUES ('The Goods Market', '38.4, 10.8', 'Market');
+SQL> INSERT INTO location VALUES ('Goblin Caves', '-56.4, 32.9', 'Cave');
+SQL> INSERT INTO location VALUES ('The Haunted Forest', '-43, 38', 'Forest');
+SQL> 
+SQL> --Race Inserts
+SQL> INSERT INTO race VALUES ('Wizard', 10, 4, 2);
+SQL> INSERT INTO race VALUES ('Elf', 5, 10, 3);
+SQL> INSERT INTO race VALUES ('Goblin', 3, 3, 2);
+SQL> INSERT INTO race VALUES ('Human', 4, 5, 3);
+SQL> 
+SQL> --isDoing Inserts
+SQL> INSERT INTO isDoing VALUES ('leyons', 'Leo The Great', 1, 50);
+SQL> INSERT INTO isDoing VALUES ('leyons', 'Leo The Great', 3, 12);
+SQL> INSERT INTO isDoing VALUES ('philippicard', 'Big Phil', 4, 92);
+SQL> INSERT INTO isDoing VALUES ('gabegunnink', 'Gabster', 1, 51);
+SQL> 
+SQL> --Quest Inserts--
+SQL> INSERT INTO quest VALUES (1, 'Goblin Hunt', 'Hunt', 'An army of goblins are attacking the city! Hunt them!');
+SQL> INSERT INTO quest VALUES (2, 'Resuce the Princess', 'Rescue', 'The dragon has kidnapped the princess. Please rescue her!');
+SQL> INSERT INTO quest VALUES (3, 'Slay the Dragon', 'Hunt', 'An evil dragon is attacking the castle. Please save the castle!');
+SQL> INSERT INTO quest VALUES (4, 'Find the Gold', 'Find', 'The king has lost his gold! Please go and find it.');
 SQL> 
 SQL> SET FEEDBACK ON
 SQL> COMMIT;
@@ -178,13 +295,13 @@ USERNAME                       CNAME
 ------------------------------ ------------------------------                   
 PASSWORD                                 ISLOGGEDIN LANGUAGE                    
 ---------------------------------------- ---------- --------------------        
-adamchlebek                    Adam                                             
+adamchlebek                    Gandalf                                          
 password123                                       0 EN                          
                                                                                 
-phillippicard                  Phillip                                          
+philippicard                   Big Phil                                         
 philpass                                          1 EN                          
                                                                                 
-gabegunnink                    Gabe                                             
+gabegunnink                    Gabster                                          
 passgabe12                                        0 EN                          
                                                                                 
 
@@ -192,17 +309,14 @@ USERNAME                       CNAME
 ------------------------------ ------------------------------                   
 PASSWORD                                 ISLOGGEDIN LANGUAGE                    
 ---------------------------------------- ---------- --------------------        
-pablous                        Pablo                                            
+pablous                        Mega Pablo                                       
 pablopass                                         1 ES                          
                                                                                 
-leyons                         Leo                                              
+leyons                         Leo The Great                                    
 wordPass                                          0 FR                          
                                                                                 
-adamles2                       Adam                                             
-adampass1                                         0 DE                          
-                                                                                
 
-6 rows selected.
+5 rows selected.
 
 SQL> SELECT * FROM loginTimes;
 
@@ -238,23 +352,317 @@ USERNAME
 ------------------------------                                                  
 LOGINTIME                                                                       
 ---------------------------------------------------------------------------     
-phillippicard                                                                   
+philippicard                                                                    
 11-JAN-19 05.12.32.000000 AM                                                    
                                                                                 
-phillippicard                                                                   
+philippicard                                                                    
 12-MAR-19 09.42.35.000000 PM                                                    
                                                                                 
 
 8 rows selected.
 
+SQL> SELECT * FROM characters;
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+RNAME                                    LNAME                                  
+---------------------------------------- ------------------------------         
+    HEALTH POSITION                                                             
+---------- ------------------------------                                       
+adamchlebek                    Gandalf                                          
+Wizard                                   King City                              
+       100 10.123, -18.294                                                      
+                                                                                
+philippicard                   Big Phil                                         
+Elf                                      Castle of Doom                         
+        75 110.123, 32.294                                                      
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+RNAME                                    LNAME                                  
+---------------------------------------- ------------------------------         
+    HEALTH POSITION                                                             
+---------- ------------------------------                                       
+                                                                                
+gabegunnink                    Gabster                                          
+Wizard                                   Castle of Doom                         
+        52 103, 36.4                                                            
+                                                                                
+pablous                        Mega Pablo                                       
+Human                                    The Goods Market                       
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+RNAME                                    LNAME                                  
+---------------------------------------- ------------------------------         
+    HEALTH POSITION                                                             
+---------- ------------------------------                                       
+       100 37.3, 10.24                                                          
+                                                                                
+leyons                         Leo The Great                                    
+Goblin                                   Goblin Caves                           
+        87 -56, 32                                                              
+                                                                                
+
+5 rows selected.
+
+SQL> SELECT * FROM item;
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+adamchlebek                    Gandalf                                          
+Red Sharp                                Sword                                  
+         4                                                                      
+                                                                                
+adamchlebek                    Gandalf                                          
+Ninja Star                               Knife                                  
+         3                                                                      
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+                                                                                
+adamchlebek                    Gandalf                                          
+Wooden Sniper                            Bow                                    
+         5                                                                      
+                                                                                
+philippicard                   Big Phil                                         
+Gauze                                    Health Pack                            
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+         1                                                                      
+                                                                                
+philippicard                   Big Phil                                         
+Beef                                     Food                                   
+         3                                                                      
+                                                                                
+philippicard                   Big Phil                                         
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+Bread                                    Food                                   
+         1                                                                      
+                                                                                
+gabegunnink                    Gabster                                          
+fire staff++                             magic weapon                           
+         4                                                                      
+                                                                                
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+gabegunnink                    Gabster                                          
+fire runes                               ammo                                   
+         1                                                                      
+                                                                                
+gabegunnink                    Gabster                                          
+robes of mordor                          magic armor                            
+         5                                                                      
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+                                                                                
+pablous                        Mega Pablo                                       
+Sprinters                                Shoes                                  
+         3                                                                      
+                                                                                
+pablous                        Mega Pablo                                       
+Red Bull                                 Drink                                  
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+         1                                                                      
+                                                                                
+pablous                        Mega Pablo                                       
+Marker                                   Writing                                
+         3                                                                      
+                                                                                
+leyons                         Leo The Great                                    
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+Bloodhound                               Animal                                 
+         4                                                                      
+                                                                                
+leyons                         Leo The Great                                    
+Red Bull                                 Drink                                  
+         1                                                                      
+                                                                                
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+INAME                                    CTYPE                                  
+---------------------------------------- ------------------------------         
+    ILEVEL                                                                      
+----------                                                                      
+leyons                         Leo The Great                                    
+Marker                                   Writing                                
+         3                                                                      
+                                                                                
+
+15 rows selected.
+
+SQL> SELECT * FROM location;
+
+LNAME                          POSITION                                         
+------------------------------ ------------------------------                   
+LTYPE                                                                           
+------------------------------                                                  
+King City                      10.6, -16                                        
+City                                                                            
+                                                                                
+Castle of Doom                 100.45, 36.8                                     
+Castle                                                                          
+                                                                                
+The Weapons Market             43.9, 11.6                                       
+Market                                                                          
+                                                                                
+
+LNAME                          POSITION                                         
+------------------------------ ------------------------------                   
+LTYPE                                                                           
+------------------------------                                                  
+The Goods Market               38.4, 10.8                                       
+Market                                                                          
+                                                                                
+Goblin Caves                   -56.4, 32.9                                      
+Cave                                                                            
+                                                                                
+The Haunted Forest             -43, 38                                          
+Forest                                                                          
+                                                                                
+
+6 rows selected.
+
+SQL> SELECT * FROM race;
+
+RNAME                            STRENGTH      SPEED      ARMOR                 
+------------------------------ ---------- ---------- ----------                 
+Wizard                                 10          4          2                 
+Elf                                     5         10          3                 
+Goblin                                  3          3          2                 
+Human                                   4          5          3                 
+
+4 rows selected.
+
+SQL> SELECT * FROM isDoing;
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+QID                                      PERCENTPROGRESS                        
+---------------------------------------- ---------------                        
+leyons                         Leo The Great                                    
+1                                                     50                        
+                                                                                
+leyons                         Leo The Great                                    
+3                                                     12                        
+                                                                                
+philippicard                   Big Phil                                         
+4                                                     92                        
+                                                                                
+
+USERNAME                       CNAME                                            
+------------------------------ ------------------------------                   
+QID                                      PERCENTPROGRESS                        
+---------------------------------------- ---------------                        
+gabegunnink                    Gabster                                          
+1                                                     51                        
+                                                                                
+
+4 rows selected.
+
+SQL> SELECT * FROM quest;
+
+QID                                      QNAME                                  
+---------------------------------------- ------------------------------         
+TASK                                                                            
+----------------------------------------                                        
+DESCRIPTION                                                                     
+--------------------------------------------------------------------------------
+1                                        Goblin Hunt                            
+Hunt                                                                            
+An army of goblins are attacking the city! Hunt them!                           
+                                                                                
+2                                        Resuce the Princess                    
+Rescue                                                                          
+The dragon has kidnapped the princess. Please rescue her!                       
+
+QID                                      QNAME                                  
+---------------------------------------- ------------------------------         
+TASK                                                                            
+----------------------------------------                                        
+DESCRIPTION                                                                     
+--------------------------------------------------------------------------------
+                                                                                
+3                                        Slay the Dragon                        
+Hunt                                                                            
+An evil dragon is attacking the castle. Please save the castle!                 
+                                                                                
+4                                        Find the Gold                          
+Find                                                                            
+
+QID                                      QNAME                                  
+---------------------------------------- ------------------------------         
+TASK                                                                            
+----------------------------------------                                        
+DESCRIPTION                                                                     
+--------------------------------------------------------------------------------
+The king has lost his gold! Please go and find it.                              
+                                                                                
+
+4 rows selected.
+
 SQL> 
 SQL> --< The SQL queries>. Include the following for each query:
-SQL> --1. A comment line stating the query number and the feature(s) it demonstrates
-SQL> --(e.g. – Q25 – correlated subquery).
+SQL> --1. A comment line stating the query number and the feature(s) it demonstrates (e.g. – Q25 – correlated subquery).
 SQL> --2. A comment line stating the query in English.
 SQL> --3. The SQL code for the query.
+SQL> --NOTE: we need. . .
+SQL> -- a join involving at least four relations
+SQL> -- a self-join
+SQL> -- UNION, INTESECT, and/or MINUS
+SQL> -- SUM, AVG, MAX and/or MIN
+SQL> -- GROUP BY, HAVING, and ORDER BY, all in same query
+SQL> -- a correlated subquery
+SQL> -- a non-correlated subquery
+SQL> -- a relational DIVISION query
+SQL> -- an outer join query
 SQL> --
 SQL> --< The insert/delete/update statements to test the enforcement of ICs >
+SQL> 
+SQL> 
+SQL> 
 SQL> --Include the following items for every IC that you test (Important: see the next section titled
 SQL> --“Submit a final report” regarding which ICs to test).
 SQL> --A comment line stating: Testing: < IC name>
