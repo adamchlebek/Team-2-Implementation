@@ -88,25 +88,34 @@ CREATE TABLE quest (
 
 --Add Foreign Keys Here
 ALTER TABLE users
-ADD FOREIGN KEY (cName) REFERENCES characters(cName);
+ADD CONSTRAINT fk1 FOREIGN KEY (username, cName) REFERENCES characters(username, cName)
+	ON DELETE CASCADE
+	DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE loginTimes
-ADD FOREIGN KEY (username) references users(username);
+ADD CONSTRAINT fk2 FOREIGN KEY (username) REFERENCES users(username)
+	ON DELETE CASCADE
+	DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE characters
-ADD FOREIGN KEY (username) references users(username);
+ADD CONSTRAINT fk3 FOREIGN KEY (username) REFERENCES users(username)
+	ON DELETE CASCADE
+	DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE item
-ADD FOREIGN KEY (username, cName) references users(username, cName);
+ADD CONSTRAINT fk4 FOREIGN KEY (username, cName) REFERENCES characters(username, cName)
+	ON DELETE CASCADE
+	DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE isDoing
-ADD FOREIGN KEY (username, cName) references users(username, cName);
-
---ALTER TABLE isDoing
---ADD FOREIGN KEY (cName) references characters(cName);
+ADD CONSTRAINT fk5 FOREIGN KEY (username, cName) REFERENCES characters(username, cName)
+	ON DELETE CASCADE
+	DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE isDoing
-ADD FOREIGN KEY (qID) references quest(qID);
+ADD CONSTRAINT fk6 FOREIGN KEY (qID) REFERENCES quest(qID)
+	ON DELETE CASCADE
+	DEFERRABLE INITIALLY DEFERRED;
 --End of Adding Foreign Keys
 
 
@@ -217,6 +226,7 @@ SELECT * FROM quest;
 -- an outer join query
 --
 --< The insert/delete/update statements to test the enforcement of ICs >
+
 
 
 --Include the following items for every IC that you test (Important: see the next section titled
