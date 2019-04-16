@@ -315,12 +315,21 @@ FROM characters C LEFT OUTER JOIN isDoing D ON C.username = D.username AND C.cNa
 --
 --< The insert/delete/update statements to test the enforcement of ICs >
 -- Testing: <UC1>
-Insert INTO users VALUES ('test','testname','testpass',0,'XX');
-Insert INTO users VALUES ('test1','testname1','testpass1',0,'w');
-Insert INTO users VALUES ('test2','testname2','testpass2',0,'llama');
+INSERT INTO users VALUES ('test','testname','testpass',0,'XX');
+INSERT INTO users VALUES ('test1','testname1','testpass1',0,'w');
+INSERT INTO users VALUES ('test2','testname2','testpass2',0,'llama');
 UPDATE users 
 SET language = ''
 WHERE isLoggedIn = 0;
+--
+-- Testing: <username>
+INSERT INTO users VALUES (NULL, 'test', 'testpass', 0, 'en');
+--
+-- Testing: <rName>
+INSERT INTO characters VALUES ('philippicard', 'john is the man', NULL, 'King City', 100, '10.123, -18.294');
+--
+-- Testing: <password>
+INSERT INTO users VALUES ('myuser', 'myname', NULL, 0, 'en');
 --
 -- Testing: <UC2>
 UPDATE location
